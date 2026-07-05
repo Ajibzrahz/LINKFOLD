@@ -1,0 +1,1 @@
+//GET /:username, GET /r/:linkId (Person 2, open)

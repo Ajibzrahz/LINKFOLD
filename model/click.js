@@ -1,0 +1,1 @@
+//one recorded click event
