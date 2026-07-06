@@ -1,18 +1,19 @@
 // CRUD for pages/links (Person 1, protected)
 import express from "express";
 import {
+  addLink,
   createPage,
-  deletePage,
-  getPage,
-  updatePage,
-} from "../controller/page-controller";
-import authenticate from "../middleware/auth";
+  getMyPage,
+  removeLink,
+} from "../controller/page-controller.js";
+import authenticate from "../middleware/auth.js";
 
 const router = express.Router();
-router.use(authenticate)
+router.use(authenticate);
 
-router.route("/").put(updatePage).post(createPage).delete(deletePage);
-router.get("/:username", getPage);
+router.route("").post(createPage);
+router.get("/me", getMyPage);
+router.post("/links", addLink);
+router.delete("/links/:id", removeLink);
 
-
-export default router
+export default router;

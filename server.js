@@ -1,17 +1,24 @@
 // app entry, mounts routes
+import dotenv from "./config/env.js";
 import express from "express";
+import cors from "cors";
 import connectDB from "./config/db.js";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import pageRouter from "./route/pages.js";
+import errorHandlerMiddleware from "./middleware/error-handler.js";
 
 const app = express();
 
-app.use(express.json());
-app.use(bodyParser.urlencoded({extended: true}))
-app.use(cookieParser())
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
-app.use("api/v1/pages", pageRouter)
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+app.use("/api/v1/pages", pageRouter);
+
+app.use(errorHandlerMiddleware)
 
 const port = process.env.PORT || 5000;
 const start = async () => {
@@ -24,3 +31,5 @@ const start = async () => {
     console.log(error);
   }
 };
+
+start()

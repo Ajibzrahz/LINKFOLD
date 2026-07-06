@@ -7,6 +7,7 @@ const pageSchema = new mongoose.Schema(
       type: String,
       index: true,
       required: true,
+      unique: true,
     },
     username: {
       type: String,
