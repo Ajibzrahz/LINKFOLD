@@ -5,8 +5,9 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import pageRouter from "./route/pages.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
+import pageRouter from "./route/pages.js";
+import publicRouter from "./route/public.js";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use("/api/v1/pages", pageRouter);
+app.use("/api/v1/public", publicRouter)
 
 app.use(errorHandlerMiddleware)
 
