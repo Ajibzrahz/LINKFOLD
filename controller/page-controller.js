@@ -56,6 +56,12 @@ const addLink = async (req, res, next) => {
       return next(err);
     }
 
+    if (!payload) {
+      const err = new Error("Input the required fields");
+      err.status = 400;
+      return next(err);
+    }
+
     const numberOfLinks = await Link.countDocuments({ pageId: page._id });
     const user = await User.findOne({ supabaseId: req.user.id });
     const isProUser = user.isPro === true;

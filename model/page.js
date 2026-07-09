@@ -20,6 +20,10 @@ const pageSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    totalViews: {
+      type: Number,
+      default: 0
+    }
   },
   { timestamps: true },
 );

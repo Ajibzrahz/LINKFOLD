@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
 import pageRouter from "./route/pages.js";
 import publicRouter from "./route/public.js";
+import analyticsRouter from "./route/analytics.js";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(cookieParser());
 
 app.use("/api/v1/pages", pageRouter);
 app.use("/api/v1/public", publicRouter)
+app.use("/api/v1/analytics", analyticsRouter)
 
 app.use(errorHandlerMiddleware)
 

@@ -15,6 +15,7 @@ const getPublicPage = async (req, res, next) => {
     }
 
     const links = await Link.find({ pageId: page._id }).sort({ order: 1 });
+    await Page.findByIdAndUpdate(page._id, { $inc: { totalViews: 1 } });
 
     return res
       .status(200)
