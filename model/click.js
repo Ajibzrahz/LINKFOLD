@@ -1,4 +1,4 @@
-//one recorded click event
+// click.js
 import mongoose from "mongoose";
 
 const clickSchema = new mongoose.Schema(
@@ -20,6 +20,14 @@ const clickSchema = new mongoose.Schema(
     visitorId: {
       type: String,
       index: true,
+    },
+    country: {
+      type: String,
+      default: null,
+    },
+    city: {
+      type: String,
+      default: null,
     },
   },
   { timestamps: true },

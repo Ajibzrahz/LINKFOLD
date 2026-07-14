@@ -2,6 +2,7 @@ import Click from "../model/click.js";
 import Link from "../model/link.js";
 import Page from "../model/page.js";
 import { v4 as uuidv4 } from "uuid";
+import geoip from "geoip-lite"
 
 const getPublicPage = async (req, res, next) => {
   const { username } = req.params;
@@ -36,7 +37,6 @@ const redirectLink = async (req, res, next) => {
       $inc: { clickCount: 1 },
     });
 
-    // inside your public page or redirect route
     let visitorId = req.cookies.linkfold_visitor_id;
     if (!visitorId) {
       visitorId = uuidv4();
@@ -46,10 +46,19 @@ const redirectLink = async (req, res, next) => {
       });
     }
 
+    // resolve the visitor's IP, then look up its location
+    const ip =
+      req.headers["x-forwarded-for"]?.split(",")[0].trim() ||
+      req.socket.remoteAddress;
+    const geo = geoip.lookup(ip);
+
     const clicked = await Click.create({
       linkId: link._id,
       pageId: link.pageId,
       visitorId,
+      referrer: req.get("referrer") || "",
+      country: geo?.country || null,
+      city: geo?.city || null,
     });
 
     res.status(302).redirect(`${link.url}`);
@@ -57,5 +66,6 @@ const redirectLink = async (req, res, next) => {
     next(error);
   }
 };
+
 
 export { getPublicPage, redirectLink };

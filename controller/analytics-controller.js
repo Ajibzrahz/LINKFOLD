@@ -15,7 +15,7 @@ const analytics = async (req, res, next) => {
 
     const page = await Page.findOne({ userId: req.user.id });
     if (!page) {
-      return res.status(200).json({ totals: { clicks: 0, links: 0 }, byDay: [], topLinks: [] });
+      return res.status(200).json({ totals: { clicks: 0, links: 0 }, byDay: [], byCountry: [], topLinks: [] });
     }
 
     const linkCount = await Link.countDocuments({ pageId: page._id });
@@ -40,6 +40,18 @@ const analytics = async (req, res, next) => {
       { $project: { _id: 0, date: "$_id", clicks: 1 } },
     ]);
 
+    const byCountry = await Click.aggregate([
+      { $match: { pageId: page._id } },
+      {
+        $group: {
+          _id: { $ifNull: ["$country", "Unknown"] },
+          clicks: { $sum: 1 },
+        },
+      },
+      { $sort: { clicks: -1 } },
+      { $project: { _id: 0, country: "$_id", clicks: 1 } },
+    ]);
+
     const topLinksResult = await Link.find({ pageId: page._id })
       .sort({ clickCount: -1 })
       .limit(5)
@@ -50,6 +62,7 @@ const analytics = async (req, res, next) => {
     return res.status(200).json({
       totals: { clicks: totalClicks, links: linkCount },
       byDay,
+      byCountry,
       topLinks,
     });
   } catch (error) {
